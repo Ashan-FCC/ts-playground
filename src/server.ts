@@ -1,11 +1,25 @@
-import express, {Request, Response, NextFunction} from 'express';
+import App from './app';
+import PostsController from './controllers/PostsController';
+import DefaultController from './controllers/DefaultController';
 
-const app = express();
+import 'dotenv/config';
+import * as mongoose from 'mongoose';
 
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
-    res.send('Hello World');
-});
+const {
+    MONGO_USER,
+    MONGO_PASSWORD,
+    MONGO_PATH,
+    PORT
+} = process.env;
 
-const port = process.env.PORT || 4000;
+mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`);
 
-app.listen(port, () => console.log(`Server started on: ${port}`));
+
+
+const port: number = parseInt(process.env.PORT) || 4000;
+const app = new App(port, [
+    new DefaultController(),
+    new PostsController()
+]);
+
+app.listen();
