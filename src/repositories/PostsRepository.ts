@@ -21,6 +21,7 @@ class PostsRepository implements IPostsRepository {
         const posts = await postsModel.find();
         return posts.map(p => {
             return ({
+                id: p._id,
                 author: p.author,
                 content: p.content,
                 title: p.title

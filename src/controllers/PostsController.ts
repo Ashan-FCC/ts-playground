@@ -3,6 +3,8 @@ import HttpStatus from 'http-status-codes';
 import PostsRepository from '../repositories/PostsRepository';
 import IController from '../interfaces/IController';
 import PostNotFoundException from '../exceptions/PostNotFoundException';
+import validationMiddleware from '../middlewares/validationMiddleware';
+import PostDto from '../models/DTO/PostDto';
 
 class PostsController implements IController {
     public path = '/posts'
@@ -17,9 +19,9 @@ class PostsController implements IController {
     private initializeRoutes = () => {
         this.router.get(this.path, this.getAllPosts);
         this.router.get(`${this.path}/:id`, this.getPostsById);
-        this.router.patch(`${this.path}/:id`, this.updatePost);
+        this.router.patch(`${this.path}/:id`, validationMiddleware(PostDto, true), this.updatePost);
         this.router.delete(`${this.path}/:id`, this.deletePost);
-        this.router.post(this.path, this.validate, this.createAPost);
+        this.router.post(this.path, validationMiddleware(PostDto), this.createAPost);
     }
 
     private getAllPosts = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -62,15 +64,6 @@ class PostsController implements IController {
             next(new PostNotFoundException(id));
         }
     }
-
-    private validate = (req: Request, res: Response, next: NextFunction) => {
-        const {author, content, title} = req.body;
-        if(author && content && title){
-            return next();
-        }
-        res.status(HttpStatus.BAD_REQUEST).send('Invalid body');
-    }
-
 }
 
 export default PostsController;
