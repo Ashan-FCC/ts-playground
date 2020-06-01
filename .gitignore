@@ -3,3 +3,4 @@ build
 dist
 mongo_volume/*
 .env
+launch.json
