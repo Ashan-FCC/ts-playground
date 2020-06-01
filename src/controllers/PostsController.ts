@@ -1,6 +1,7 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { HTTP_CREATED, BAD_REQUEST } from '../statusCodes';
 import Post from '../interfaces/Post';
+import PostsRepository from '../repositories/Posts';
 
 class PostsController {
     private path = '/posts'
@@ -12,6 +13,7 @@ class PostsController {
             title: 'Lorem Ipsum',
         }
     ];
+    private postsRepo = new PostsRepository();
 
     constructor()
     {
@@ -27,10 +29,11 @@ class PostsController {
         res.send(this.posts);
     }
 
-    createAPost = (req: Request, res: Response, next: NextFunction) => {
+    async createAPost(req: Request, res: Response, next: NextFunction) {
         const {author, content, title}  = req.body;
         this.posts.push({author, content, title});
-        res.send({author, content, title}).status(HTTP_CREATED);
+        const createdPost = await this.postsRepo.createAPost({author, content, title});
+        res.send(createdPost).status(HTTP_CREATED);
     }
 
     validate = (req: Request, res: Response, next: NextFunction) => {
