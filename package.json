@@ -26,6 +26,7 @@
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
     "mongoose": "^5.9.16"
   },
   "devDependencies": {
