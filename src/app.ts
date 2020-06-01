@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
+import errorHandler from './middlewares/errorHandler';
 
 class App {
    
@@ -13,6 +14,7 @@ class App {
        this.initializeMiddlewares();
        this.initializeController(controllers);
        this.connectToMongo();
+       this.initializeErrorHandling();
    }
 
    private initializeMiddlewares = () => {
@@ -40,6 +42,10 @@ class App {
         await mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_PATH}`);
     }
 
+    private initializeErrorHandling() {
+        this.app.use(errorHandler);
+    }
+    
    listen = () => {
        this.app.listen(this.port, () => {
            console.log(`App is listening on port: ${this.port}`);
