@@ -1,7 +1,9 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
 
 class App {
+   
    public app: express.Application
 
    constructor(public port: number, controllers)
@@ -10,6 +12,7 @@ class App {
 
        this.initializeMiddlewares();
        this.initializeController(controllers);
+       this.connectToMongo();
    }
 
    private initializeMiddlewares = () => {
@@ -25,6 +28,17 @@ class App {
             this.app.use('/', controller.router);
         });
    }
+
+    private async connectToMongo() {
+        const {
+            MONGO_USER,
+            MONGO_PASSWORD,
+            MONGO_PATH,
+            PORT
+        } = process.env;
+        
+        await mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_PATH}`);
+    }
 
    listen = () => {
        this.app.listen(this.port, () => {
