@@ -1,8 +1,8 @@
 import Post from '../interfaces/Post';
 import postsModel from '../models/Posts';
-import IRestRepository from '../interfaces/IRestRepository';
+import IPostsRepository from '../interfaces/IRestRepository';
 
-class PostsRepository implements IRestRepository {
+class PostsRepository implements IPostsRepository {
     constructor(){
 
     }
